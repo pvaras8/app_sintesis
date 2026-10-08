@@ -7,7 +7,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # Configuración de autenticación con Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("healthy-bazaar-443012-v8-094bce9348c8.json", scope)
+credentials_dict = dict(st.secrets["gcp_service_account"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
 client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo usando el ID (reemplaza por el ID real de tu hoja)
@@ -64,7 +65,7 @@ else:
         if st.button("Guardar clasificaciones"):
             save_data(classifications)
             st.success("Clasificaciones guardadas correctamente.")
-            st.experimental_rerun()
+            st.rerun()
 
 # Botón para descargar el archivo actualizado
 st.markdown("### Descargar clasificaciones actuales")
