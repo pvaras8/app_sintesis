@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+.DS_Store
+healthy-bazaar-443012-v8-094bce9348c8.json
+.streamlit/secrets.toml
