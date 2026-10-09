@@ -23,16 +23,16 @@ sheet = client.open_by_key(sheet_id).sheet1
 
 def ensure_comment_column():
     headers = sheet.row_values(1)
-    if "Comentario" not in headers:
-        sheet.update_cell(1, len(headers) + 1, "Comentario")
+    if "Comentarios" not in headers:
+        sheet.update_cell(1, len(headers) + 1, "Comentarios")
 
 
 # Función para cargar datos desde Google Sheets
 def load_data():
     records = sheet.get_all_records()  # Lee todos los datos como una lista de diccionarios
     df = pd.DataFrame(records)  # Convierte a DataFrame
-    if "Comentario" not in df.columns:
-        df["Comentario"] = ""
+    if "Comentarios" not in df.columns:
+        df["Comentarios"] = ""
     return df
 
 
@@ -42,12 +42,12 @@ def save_data(classifications):
     records = sheet.get_all_records()  # Lista de todas las filas
     headers = sheet.row_values(1)
 
-    classification_col = headers.index("Clasificación") + 1
-    comment_col = headers.index("Comentario") + 1
+    classification_col = headers.index("Clasificacion") + 1
+    comment_col = headers.index("Comentarios") + 1
 
     for smiles, payload in classifications.items():
-        classification = payload["Clasificación"]
-        comment = payload.get("Comentario", "")
+        classification = payload["Clasificacion"]
+        comment = payload.get("Comentarios", "")
         for i, record in enumerate(records):
             if record["SMILES"] == smiles:
                 sheet.update_cell(i + 2, classification_col, classification)
@@ -60,12 +60,12 @@ data = load_data()
 # Interfaz de usuario en Streamlit
 st.title("Clasificación de Moléculas")
 
-if "Clasificación" not in data.columns:
-    st.error("La columna 'Clasificación' no existe en la hoja de cálculo. Verifica tu archivo.")
+if "Clasificacion" not in data.columns:
+    st.error("La columna 'Clasificacion' no existe en la hoja de cálculo. Verifica tu archivo.")
 else:
-    data["Clasificación"] = data["Clasificación"].replace("", None)
-    data["Comentario"] = data["Comentario"].fillna("")
-    sin_clasificar = data[data["Clasificación"].isna()]
+    data["Clasificacion"] = data["Clasificacion"].replace("", None)
+    data["Comentarios"] = data["Comentarios"].fillna("")
+    sin_clasificar = data[data["Clasificacion"].isna()]
 
     if sin_clasificar.empty:
         st.write("¡Todas las moléculas han sido clasificadas! 🎉")
@@ -81,15 +81,15 @@ else:
             st.image(Draw.MolToImage(mol), caption=f"Molécula: {smiles}", use_column_width=True)
 
             decision = st.radio(
-                f"Clasificación para {smiles}:", ["Buena", "Mala"], key=f"clasif_{smiles}"
+                f"Clasificacion para {smiles}:", ["Buena", "Mala"], key=f"clasif_{smiles}"
             )
             comment = st.text_area(
-                f"Comentario opcional para {smiles}:",
+                f"Comentarios opcional para {smiles}:",
                 value="",
                 key=f"comentario_{smiles}",
                 placeholder="Ej: estructura prometedora, alerta de toxicidad, etc. (opcional)",
             )
-            classifications[smiles] = {"Clasificación": decision, "Comentario": comment}
+            classifications[smiles] = {"Clasificacion": decision, "Comentarios": comment}
 
         if st.button("Guardar clasificaciones"):
             save_data(classifications)
