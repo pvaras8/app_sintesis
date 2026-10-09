@@ -45,7 +45,8 @@ def save_data(classifications):
     classification_col = headers.index("Clasificacion") + 1
     comment_col = headers.index("Comentarios") + 1
 
-    for smiles, payload in classifications.items():
+    for row_id, payload in classifications.items():
+        smiles = payload["SMILES"]
         classification = payload["Clasificacion"]
         comment = payload.get("Comentarios", "")
         for i, record in enumerate(records):
@@ -77,19 +78,26 @@ else:
 
         for index, row in moleculas_a_mostrar.iterrows():
             smiles = row["SMILES"]
+            row_id = index
             mol = Chem.MolFromSmiles(smiles)
             st.image(Draw.MolToImage(mol), caption=f"Molécula: {smiles}", use_column_width=True)
 
             decision = st.radio(
-                f"Clasificacion para {smiles}:", ["Buena", "Mala"], key=f"clasif_{smiles}"
+                f"Clasificacion para {smiles}:",
+                ["Buena", "Mala"],
+                key=f"clasif_{row_id}_{smiles}",
             )
             comment = st.text_area(
                 f"Comentarios opcional para {smiles}:",
                 value="",
-                key=f"comentario_{smiles}",
+                key=f"comentario_{row_id}_{smiles}",
                 placeholder="Ej: estructura prometedora, alerta de toxicidad, etc. (opcional)",
             )
-            classifications[smiles] = {"Clasificacion": decision, "Comentarios": comment}
+            classifications[row_id] = {
+                "SMILES": smiles,
+                "Clasificacion": decision,
+                "Comentarios": comment,
+            }
 
         if st.button("Guardar clasificaciones"):
             save_data(classifications)
