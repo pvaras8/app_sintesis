@@ -1,0 +1,6 @@
+sampling_group,n,percent,mean_docking,boltz_pass_n,targets_n
+Pasan Boltz,250,25.0,-8.639,250,5
+Top docking que no pasa Boltz,250,25.0,-10.768,0,5
+Docking intermedio,200,20.0,-8.731,0,5
+Docking pobre,100,10.0,-5.509,0,5
+Seleccionadas por diversidad,200,20.0,-7.78,24,7

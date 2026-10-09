@@ -17,7 +17,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope
 client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo usando el ID (reemplaza por el ID real de tu hoja)
-sheet_id = "1Y_kS6fxQC09C_vlOmKovSr9DmlgxODYm4fl_zCZmi5I"  # Cambia esto por el ID real de tu hoja
+sheet_id = "1AVEHLBoKES1zxb0W3wa2MS9j3JdP1_KbhGuLeUJ7V4o"  # Cambia esto por el ID real de tu hoja
 sheet = client.open_by_key(sheet_id).sheet1
 
 
